@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The Button Room</title>
+  <style>
+    * { box-sizing: border-box; }
+    :root { font-family: 'Segoe UI', sans-serif; color: #f0f2ed; background: #161917; color-scheme: dark; }
+    body { margin: 0; min-height: 100vh; }
+    header { padding: 25px 6%; border-bottom: 1px solid #363b35; display: flex; justify-content: space-between; align-items: center; gap: 20px; }
+    .brand { font-weight: 700; font-size: 16px; }
+    .status { font: 12px monospace; color: #c7ef81; }
+    main { max-width: 1100px; padding: 70px 28px; margin: auto; }
+    .eyebrow { color: #a9b1a7; font: 12px monospace; margin: 0 0 14px; }
+    h1 { font-size: 48px; line-height: 1.1; margin: 0 0 48px; font-weight: 650; }
+    .board { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+    .slot { border: 1px solid #3b4139; border-radius: 8px; padding: 22px; background: #20251f; min-height: 270px; display: flex; flex-direction: column; align-items: center; justify-content: space-between; }
+    .slot:first-child { background: #292d23; border-color: #65734c; }
+    .slot-top { width: 100%; display: flex; justify-content: space-between; font: 11px monospace; color: #98a092; }
+    .live { color: #c7ef81; }
+    .big-button { width: 126px; height: 126px; border-radius: 50%; border: 6px solid #151814; background: #c7ef81; color: #263218; box-shadow: 0 8px 0 #687d43, 0 13px 20px #0006; cursor: pointer; font: 700 18px 'Segoe UI', sans-serif; transition: transform .1s, box-shadow .1s; }
+    .big-button:hover:enabled { background: #d8ffa0; transform: translateY(-2px); }
+    .big-button:active:enabled { transform: translateY(6px); box-shadow: 0 2px 0 #687d43; }
+    .big-button:focus-visible { outline: 3px solid white; outline-offset: 6px; }
+    .big-button:disabled { background: #363b35; color: #737b6e; box-shadow: 0 8px 0 #111510; cursor: not-allowed; }
+    .label { font-size: 14px; margin: 0; color: #bfc6b9; }
+    footer { display: flex; justify-content: space-between; gap: 16px; margin-top: 28px; font: 11px monospace; color: #98a092; }
+    dialog { position: fixed; inset: 0; padding: 0; margin: 0; width: 100vw; height: 100dvh; max-width: none; max-height: none; border: 0; background: #000; overflow: hidden; }
+    dialog::backdrop { background: black; }
+    dialog img { display: block; width: 100%; height: 100%; object-fit: contain; }
+    dialog[open] img { animation: pop .22s ease-out; }
+    .close { position: absolute; right: 20px; top: 20px; width: 44px; height: 44px; border: 1px solid #ffffff70; border-radius: 50%; background: #111c; color: white; font-size: 30px; cursor: pointer; }
+    @keyframes pop { from { transform: scale(1.35); } to { transform: scale(1); } }
+    @media (prefers-reduced-motion: reduce) { dialog[open] img { animation: none; } }
+    @media (max-width: 650px) { main { padding: 40px 20px; } h1 { font-size: 36px; margin-bottom: 30px; } .board { grid-template-columns: 1fr; } .slot { min-height: 250px; } header { padding: 22px 20px; } }
+  </style>
+</head>
+<body>
+  <header><span class="brand">THE BUTTON ROOM</span><span class="status">01 / 03 ACTIVE</span></header>
+  <main>
+    <p class="eyebrow">A LITTLE COLLECTION OF CHAOS</p>
+    <h1>Go on. Press it.</h1>
+    <div class="board">
+      <section class="slot"><div class="slot-top"><span>BUTTON 01</span><span class="live">READY</span></div><button class="big-button" id="scare" disabled>PRESS</button><p class="label">Jumpscare</p></section>
+      <section class="slot"><div class="slot-top"><span>BUTTON 02</span><span>LOCKED</span></div><button class="big-button" disabled aria-label="Button 2, coming soon">?</button><p class="label">Coming soon</p></section>
+      <section class="slot"><div class="slot-top"><span>BUTTON 03</span><span>LOCKED</span></div><button class="big-button" disabled aria-label="Button 3, coming soon">?</button><p class="label">Coming soon</p></section>
+    </div>
+    <footer><span id="counter" aria-live="polite">TIMES PRESSED: 0</span><span>MORE MISCHIEF SOON.</span></footer>
+    <p id="error" hidden>The image couldn't load. Please reload the page.</p>
+  </main>
+  <dialog id="jumpscare" aria-label="Jumpscare image"><img id="picture" src="jumpscare.png" alt="Michael Jackson's Thriller album cover"><button class="close" aria-label="Close jumpscare" title="Close">&times;</button></dialog>
+  <script>
+    const trigger = document.querySelector('#scare');
+    const dialog = document.querySelector('#jumpscare');
+    const picture = document.querySelector('#picture');
+    let count = 0;
+    const ready = () => { trigger.disabled = false; };
+    picture.addEventListener('load', ready);
+    picture.addEventListener('error', () => { document.querySelector('#error').hidden = false; });
+    if (picture.complete && picture.naturalWidth) ready();
+    trigger.addEventListener('click', () => {
+      dialog.showModal();
+      document.querySelector('#counter').textContent = `TIMES PRESSED: ${++count}`;
+    });
+    dialog.addEventListener('click', () => dialog.close());
+    dialog.addEventListener('close', () => trigger.focus());
+  </script>
+</body>
+</html>
