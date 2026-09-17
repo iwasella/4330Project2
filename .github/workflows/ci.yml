@@ -1,0 +1,41 @@
+name: Test and build
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Validate HTML
+        run: npx --yes html-validate@10 index.html
+
+      - name: Check referenced assets
+        run: |
+          test -f jumpscare.png
+          test -f thriller.jpg
+
+      - name: Build static site
+        run: |
+          mkdir dist
+          cp index.html jumpscare.png thriller.jpg dist/
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: site
+          path: dist
+          if-no-files-found: error
