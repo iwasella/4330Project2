@@ -37,30 +37,34 @@
   </style>
 </head>
 <body>
-  <header><span class="brand">THE BUTTON ROOM</span><span class="status">02 / 03 ACTIVE</span></header>
+  <header><span class="brand">THE BUTTON ROOM</span><span class="status">03 / 03 ACTIVE</span></header>
   <main>
     <p class="eyebrow">A LITTLE COLLECTION OF CHAOS</p>
     <h1>Go on. Press it.</h1>
     <div class="board">
       <section class="slot"><div class="slot-top"><span>BUTTON 01</span><span class="live">READY</span></div><button class="big-button" id="scare" disabled>PRESS</button><p class="label">Button 1</p></section>
       <section class="slot"><div class="slot-top"><span>BUTTON 02</span><span class="live">READY</span></div><button class="big-button" id="thriller" aria-label="Show Thriller image">PRESS</button><p class="label">Button 2</p></section>
-      <section class="slot"><div class="slot-top"><span>BUTTON 03</span><span>LOCKED</span></div><button class="big-button" disabled aria-label="Button 3, coming soon">?</button><p class="label">Coming soon</p></section>
+      <section class="slot"><div class="slot-top"><span>BUTTON 03</span><span class="live">READY</span></div><button class="big-button" id="halftime" aria-label="Play Michael Jackson sound and show photo">PRESS</button><p class="label">Button 3</p></section>
     </div>
     <footer><span id="counter" aria-live="polite">TIMES PRESSED: 0</span><span>MORE MISCHIEF SOON.</span></footer>
     <p id="error" hidden>The image couldn't load. Please reload the page.</p>
   </main>
   <dialog id="jumpscare" aria-label="Jumpscare image"><img id="picture" src="jumpscare.png" alt="Michael Jackson's Thriller album cover"><button class="close" aria-label="Close jumpscare" title="Close">&times;</button></dialog>
+  <audio id="sound" src="HeeHee.mp3" preload="auto"></audio>
   <script>
     const trigger = document.querySelector('#scare');
     const thrillerTrigger = document.querySelector('#thriller');
+    const halftimeTrigger = document.querySelector('#halftime');
     const dialog = document.querySelector('#jumpscare');
     const picture = document.querySelector('#picture');
+    const sound = document.querySelector('#sound');
     let count = 0;
     let closeTimer;
     const ready = () => { trigger.disabled = false; };
     picture.addEventListener('load', ready);
     picture.addEventListener('error', () => { document.querySelector('#error').hidden = false; });
     if (picture.complete && picture.naturalWidth) ready();
+    sound.addEventListener('ended', () => dialog.close());
     trigger.addEventListener('click', () => {
       picture.src = 'jumpscare.png';
       dialog.showModal();
@@ -75,10 +79,23 @@
       closeTimer = setTimeout(() => dialog.close(), 1000);
       document.querySelector('#counter').textContent = `TIMES PRESSED: ${++count}`;
     });
+    halftimeTrigger.addEventListener('click', () => {
+      picture.src = 'halftime.jpg';
+      dialog.showModal();
+      sound.currentTime = 0;
+      sound.play().catch(() => {});
+      clearTimeout(closeTimer);
+      document.querySelector('#counter').textContent = `TIMES PRESSED: ${++count}`;
+    });
     dialog.addEventListener('click', () => dialog.close());
     dialog.addEventListener('close', () => {
       clearTimeout(closeTimer);
-      (picture.src.endsWith('thriller.jpg') ? thrillerTrigger : trigger).focus();
+      sound.pause();
+      sound.currentTime = 0;
+      const focusTarget = picture.src.endsWith('thriller.jpg') ? thrillerTrigger
+        : picture.src.endsWith('halftime.jpg') ? halftimeTrigger
+        : trigger;
+      focusTarget.focus();
     });
   </script>
 </body>
