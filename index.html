@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -42,14 +42,14 @@
     <p class="eyebrow">A LITTLE COLLECTION OF CHAOS</p>
     <h1>Go on. Press it.</h1>
     <div class="board">
-      <section class="slot"><div class="slot-top"><span>BUTTON 01</span><span class="live">READY</span></div><button class="big-button" id="scare" disabled>PRESS</button><p class="label">Button 1</p></section>
-      <section class="slot"><div class="slot-top"><span>BUTTON 02</span><span class="live">READY</span></div><button class="big-button" id="thriller" aria-label="Show Thriller image">PRESS</button><p class="label">Button 2</p></section>
-      <section class="slot"><div class="slot-top"><span>BUTTON 03</span><span class="live">READY</span></div><button class="big-button" id="halftime" aria-label="Play Michael Jackson sound and show photo">PRESS</button><p class="label">Button 3</p></section>
+      <section class="slot"><div class="slot-top"><span>BUTTON 01</span><span class="live">READY</span></div><button class="big-button" id="scare" type="button" disabled>PRESS</button><p class="label">Button 1</p></section>
+      <section class="slot"><div class="slot-top"><span>BUTTON 02</span><span class="live">READY</span></div><button class="big-button" id="thriller" type="button" aria-label="Show Thriller image">PRESS</button><p class="label">Button 2</p></section>
+      <section class="slot"><div class="slot-top"><span>BUTTON 03</span><span class="live">READY</span></div><button class="big-button" id="halftime" type="button" aria-label="Play Michael Jackson sound and show photo">PRESS</button><p class="label">Button 3</p></section>
     </div>
     <footer><span id="counter" aria-live="polite">TIMES PRESSED: 0</span><span>MORE MISCHIEF SOON.</span></footer>
     <p id="error" hidden>The image couldn't load. Please reload the page.</p>
   </main>
-  <dialog id="jumpscare" aria-label="Jumpscare image"><img id="picture" src="jumpscare.png" alt="Michael Jackson's Thriller album cover"><button class="close" aria-label="Close jumpscare" title="Close">&times;</button></dialog>
+  <dialog id="jumpscare" aria-label="Jumpscare image"><img id="picture" src="jumpscare.png" alt="Michael Jackson's Thriller album cover"><button class="close" type="button" aria-label="Close jumpscare" title="Close">&times;</button></dialog>
   <audio id="sound" src="HeeHee.mp3" preload="auto"></audio>
   <script>
     const trigger = document.querySelector('#scare');
