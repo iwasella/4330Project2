@@ -6,26 +6,26 @@
   <title>The Button Room</title>
   <style>
     * { box-sizing: border-box; }
-    :root { font-family: 'Segoe UI', sans-serif; color: #f0f2ed; background: #161917; color-scheme: dark; }
+    :root { font-family: 'Segoe UI', sans-serif; color: #f5f1e7; background: #101112; color-scheme: dark; }
     body { margin: 0; min-height: 100vh; }
-    header { padding: 25px 6%; border-bottom: 1px solid #363b35; display: flex; justify-content: space-between; align-items: center; gap: 20px; }
-    .brand { font-weight: 700; font-size: 16px; }
-    .status { font: 12px monospace; color: #c7ef81; }
+    header { padding: 25px 6%; border-bottom: 1px solid #49413e; display: flex; justify-content: space-between; align-items: center; gap: 20px; }
+    .brand { font-weight: 700; font-size: 16px; color: #efb899; }
+    .status { font: 12px monospace; color: #efc780; }
     main { max-width: 1100px; padding: 70px 28px; margin: auto; }
-    .eyebrow { color: #a9b1a7; font: 12px monospace; margin: 0 0 14px; }
+    .eyebrow { color: #b5b6ba; font: 12px monospace; margin: 0 0 14px; }
     h1 { font-size: 48px; line-height: 1.1; margin: 0 0 48px; font-weight: 650; }
     .board { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
-    .slot { border: 1px solid #3b4139; border-radius: 8px; padding: 22px; background: #20251f; min-height: 270px; display: flex; flex-direction: column; align-items: center; justify-content: space-between; }
-    .slot:first-child { background: #292d23; border-color: #65734c; }
-    .slot-top { width: 100%; display: flex; justify-content: space-between; font: 11px monospace; color: #98a092; }
-    .live { color: #c7ef81; }
-    .big-button { width: 126px; height: 126px; border-radius: 50%; border: 6px solid #151814; background: #c7ef81; color: #263218; box-shadow: 0 8px 0 #687d43, 0 13px 20px #0006; cursor: pointer; font: 700 18px 'Segoe UI', sans-serif; transition: transform .1s, box-shadow .1s; }
-    .big-button:hover:enabled { background: #d8ffa0; transform: translateY(-2px); }
-    .big-button:active:enabled { transform: translateY(6px); box-shadow: 0 2px 0 #687d43; }
+    .slot { border: 1px solid #414246; border-radius: 8px; padding: 22px; background: #1e2023; min-height: 270px; display: flex; flex-direction: column; align-items: center; justify-content: space-between; }
+    .slot:first-child { background: #292022; border-color: #bd886b; }
+    .slot-top { width: 100%; display: flex; justify-content: space-between; font: 11px monospace; color: #acaeb5; }
+    .live { color: #efc780; }
+    .big-button { width: 126px; height: 126px; border-radius: 50%; border: 6px solid #121214; background: #bb283c; color: #fff5e9; box-shadow: 0 8px 0 #671726, 0 13px 20px #0006; cursor: pointer; font: 700 18px 'Segoe UI', sans-serif; transition: transform .1s, box-shadow .1s; }
+    .big-button:hover:enabled { background: #cf3045; transform: translateY(-2px); }
+    .big-button:active:enabled { transform: translateY(6px); box-shadow: 0 2px 0 #671726; }
     .big-button:focus-visible { outline: 3px solid white; outline-offset: 6px; }
-    .big-button:disabled { background: #363b35; color: #737b6e; box-shadow: 0 8px 0 #111510; cursor: not-allowed; }
-    .label { font-size: 14px; margin: 0; color: #bfc6b9; }
-    footer { display: flex; justify-content: space-between; gap: 16px; margin-top: 28px; font: 11px monospace; color: #98a092; }
+    .big-button:disabled { background: #393b40; color: #93969e; box-shadow: 0 8px 0 #111214; cursor: not-allowed; }
+    .label { font-size: 14px; margin: 0; color: #e3d6c9; }
+    footer { display: flex; justify-content: space-between; gap: 16px; margin-top: 28px; font: 11px monospace; color: #acaeb5; }
     dialog { position: fixed; inset: 0; padding: 0; margin: 0; width: 100vw; height: 100dvh; max-width: none; max-height: none; border: 0; background: #000; overflow: hidden; }
     dialog::backdrop { background: black; }
     dialog img { display: block; width: 100%; height: 100%; object-fit: contain; }
@@ -42,7 +42,7 @@
     <p class="eyebrow">A LITTLE COLLECTION OF CHAOS</p>
     <h1>Go on. Press it.</h1>
     <div class="board">
-      <section class="slot"><div class="slot-top"><span>BUTTON 01</span><span class="live">READY</span></div><button class="big-button" id="scare" disabled>PRESS</button><p class="label">Jumpscare</p></section>
+      <section class="slot"><div class="slot-top"><span>BUTTON 01</span><span class="live">READY</span></div><button class="big-button" id="scare" disabled>PRESS</button><p class="label">Button 1</p></section>
       <section class="slot"><div class="slot-top"><span>BUTTON 02</span><span>LOCKED</span></div><button class="big-button" disabled aria-label="Button 2, coming soon">?</button><p class="label">Coming soon</p></section>
       <section class="slot"><div class="slot-top"><span>BUTTON 03</span><span>LOCKED</span></div><button class="big-button" disabled aria-label="Button 3, coming soon">?</button><p class="label">Coming soon</p></section>
     </div>
@@ -55,16 +55,22 @@
     const dialog = document.querySelector('#jumpscare');
     const picture = document.querySelector('#picture');
     let count = 0;
+    let closeTimer;
     const ready = () => { trigger.disabled = false; };
     picture.addEventListener('load', ready);
     picture.addEventListener('error', () => { document.querySelector('#error').hidden = false; });
     if (picture.complete && picture.naturalWidth) ready();
     trigger.addEventListener('click', () => {
       dialog.showModal();
+      clearTimeout(closeTimer);
+      closeTimer = setTimeout(() => dialog.close(), 1000);
       document.querySelector('#counter').textContent = `TIMES PRESSED: ${++count}`;
     });
     dialog.addEventListener('click', () => dialog.close());
-    dialog.addEventListener('close', () => trigger.focus());
+    dialog.addEventListener('close', () => {
+      clearTimeout(closeTimer);
+      trigger.focus();
+    });
   </script>
 </body>
 </html>
